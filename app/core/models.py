@@ -118,10 +118,10 @@ class Empresa(models.Model):
 
 
 class ChequeDevolvidoManagerQuerySet(models.query.QuerySet):
-    def by_numero(self):
+    def by_numero(self, numero):
         return self.filter(numero=numero)
 
-    def by_numero_conta(self):
+    def by_numero_conta(self, numero_conta):
         return self.filter(numero_conta=numero_conta)
 
 
