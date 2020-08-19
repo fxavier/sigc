@@ -1,0 +1,45 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+<div class="container">
+ <!--/forms-inner-->
+<div class="forms-inner">
+<!--/set-1-->
+<div class="set-1">
+  <div class="graph-2 general">
+    <h3 class="inner-tittle two">Regularizacao</h3>
+      <div class="grid-1">
+          <div class="form-body">
+            <form class="form-horizontal" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+             <label for="focusedinput" class="col-sm-2 control-label">{{form.forma.label}}</label>
+             <div class="col-sm-9">
+             {{form.forma}}
+             </div>
+            </div>
+
+            <div class="form-group">
+             <label for="focusedinput" class="col-sm-2 control-label">{{form.cheque.label}}</label>
+             <div class="col-sm-9">
+             {{form.cheque}}
+             </div>
+            </div>
+
+            <div class="form-group">
+             <label for="focusedinput" class="col-sm-2 control-label">{{form.file.label}}</label>
+             <div class="col-sm-9">
+             {{form.file}}
+             </div>
+            </div>
+
+
+            <div class="col-sm-offset-2"> <button type="submit" class="btn btn-default">Gravar</button> </div>
+            <Br/>
+            </form> 
+          </div>
+        </div> 
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content  %} 

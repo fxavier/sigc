@@ -1,6 +1,8 @@
 from django.db import models
-from django.db.models import Q
-from django.urls import reverse
+from django.db.models.signals import pre_save, post_save
+
+from core.utils import regularizacao_file_path
+
 
 ESTADO_CHEQUE = (
     ('Devolvido', 'Devolvido'),
@@ -9,20 +11,14 @@ ESTADO_CHEQUE = (
 )
 
 TIPO_EMITENTE = (
-    ('Empresa', 'Empresa'),
-    ('Singular', 'Singular')
+    ('P', 'Particular'), 
+    ('E', 'Empresa')
 )
 
-class EmitenteManagerQuerySet(models.query.QuerySet):
-    def singular(self):
-        return self.filter(tipo_emitente="Singular")
-
-    def empresa(self):
-        return self.filter(tipo_emitente="Empresa")
-
-class EmpresaManagerQuerySet(models.query.QuerySet):
-    def by_assinantes(self, assinante):
-        return self.filter(assinante=assinante)
+FORMA_REGULARIZACAO = (
+    ('Cheque', 'Cheque'),
+    ('Numerario', 'Numerario')
+)
 
 class Banco(models.Model):
     nome = models.CharField(max_length=100, unique=True)
@@ -40,42 +36,9 @@ class MotivoDevolucao(models.Model):
     def __str__(self):
         return self.descricao
 
-class EmitenteManager(models.Manager):
-    def get_queryset(self):
-        return EmitenteManagerQuerySet(self.model, using=self._db)
-
-    def create_or_get(self, numero_conta):
-        created = False
-        qs = self.get_queryset().filter(numero_conta=numero_conta)
-        if qs.count() == 1:
-            emitente_obj = qs.first()
-        else:
-            emitente_obj = self.model.create(numero_conta=numero_conta)
-            created = True
-        return emitente_obj, created
-
-
-        
-            
-class Emitente(models.Model):
-    nome = models.CharField(max_length=255)
-    numero_conta = models.CharField(max_length=100, unique=True)
-    telefone_1 = models.CharField(max_length=50, unique=True)
-    telefone_2 = models.CharField(max_length=50, unique=True)
-    email = models.EmailField(max_length=100, unique=True)
-    endereco = models.CharField(max_length=255)
-    tipo_emitente = models.CharField(max_length=10, choices=TIPO_EMITENTE)
-
-    objects = EmitenteManager()
-
-
-    def __str__(self):
-        return self.nome
-
-
-class AssinanteManager(models.Manager):
-    def create(self):
-        return self.model.objects.create()
+    class Meta:
+        verbose_name = 'Motivo de Devolucao'
+        verbose_name_plural = 'Motivos de Devolucao'
 
 
 class Assinante(models.Model):
@@ -86,78 +49,54 @@ class Assinante(models.Model):
     email = models.EmailField(max_length=100, unique=True)
     endereco = models.CharField(max_length=255)
 
-    objects = AssinanteManager()
+    def __str__(self):
+        return self.nome
+
+class Emitente(models.Model):
+    nome = models.CharField(max_length=255)
+    numero_conta = models.CharField(max_length=100, unique=True)
+    telefone_1 = models.CharField(max_length=50, unique=True)
+    telefone_2 = models.CharField(max_length=50, unique=True)
+    email = models.EmailField(max_length=100, unique=True)
+    endereco = models.CharField(max_length=255)
+    tipo = models.CharField(max_length=1, choices=TIPO_EMITENTE)
+    assinante = models.ManyToManyField(Assinante, blank=True)
 
     def __str__(self):
         return self.nome
 
 
-class EmpresaManager(models.Manager):
-    def get_queryset(self):
-        return EmpresaManagerQuerySet(self.model, using=self._db)
-
-    def create_or_get(self,emitente=None, assinante=None):
-        created = False
-        qs = self.get_queryset().filter(emitente=emitente, assinante=assinante)
-        if qs.exists() and qs.count() == 1:
-            empresa_obj = qs.first()
-        else:
-            empresa_obj = self.model.create(emitente=emitente, assinante=assinante)
-            created = True
-        return empresa_obj, created
-        
-
-class Empresa(models.Model):
-    emitente = models.ForeignKey(Emitente, on_delete=models.CASCADE)
-    assinante = models.ForeignKey(Assinante, on_delete=models.CASCADE)
-
-    objects = EmpresaManager()
-
-    def __str__(self):
-        return self.emitente
-
-
-class ChequeDevolvidoManagerQuerySet(models.query.QuerySet):
-    def by_numero(self, numero):
-        return self.filter(numero=numero)
-
-    def by_numero_conta(self, numero_conta):
-        return self.filter(numero_conta=numero_conta)
-
-
-class ChequeDevolvidoManager(models.Manager):
-    def get_queryset(self):
-        return ChequeDevolvidoManagerQuerySet(self.model, using=self._db)
-
-    def create_or_get(self, emitente, numero):
-        created = False
-        qs = self.get_queryset().filter(emitente=emitente, numero=numero)
-        if qs.exists() and qs.count() == 1:
-            cheque_obj = qs.first()
-        else:
-            cheque_obj = self.model.create(emitente=emitente, numero=numero)
-            created = True
-        return cheque_obj, created
-
-
-class ChequeDevolvido(models.Model):
-    numero = models.CharField(max_length=100, unique=True)
-    numero_conta = models.CharField(max_length=100, unique=True)
-    valor = models.DecimalField(max_digits=10, decimal_places=2)
-    data_devolucao = models.DateTimeField(auto_now_add=True)
-    dias_nao_regularizado = models.IntegerField(default=0)
-    codigo_balcao = models.CharField(max_length=100, unique=True)
-    emitente = models.ForeignKey(Emitente, on_delete=models.CASCADE)
-    banco = models.OneToOneField(Banco, on_delete=models.CASCADE)
-    estado_cheque = models.CharField(max_length=50, choices=ESTADO_CHEQUE)
+class Cheque(models.Model):
     motivo_devolucao = models.ForeignKey(MotivoDevolucao, on_delete=models.CASCADE)
+    numero_cheque = models.CharField(max_length=50, unique=True)
+    emitente = models.ForeignKey(Emitente, on_delete=models.CASCADE)
+    numero_conta = models.CharField(max_length=100, unique=True)
+    valor_cheque = models.DecimalField(max_digits=10, decimal_places=2)
+    data_devolucao = models.DateTimeField(null=True, blank=True)
+    codigo_balcao = models.CharField(max_length=100)
+    estado_cheque = models.CharField(max_length=50, choices=ESTADO_CHEQUE, default='Devolvido')
+    banco = models.ForeignKey(Banco, on_delete=models.CASCADE)
+    data_criacao = models.DateTimeField(auto_now_add=True)
+    dias = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.numero
+        return self.numero_cheque
+
+class Regularizacao(models.Model):
+    forma = models.CharField(max_length=10, choices=FORMA_REGULARIZACAO)
+    cheque = models.ForeignKey(Cheque, on_delete=models.CASCADE)
+    file = models.FileField(upload_to=regularizacao_file_path, null=True, blank=True)
 
 
+    def __str__(self):
+        return self.cheque.numero_cheque
 
+# def update_estado_cheque(sender, instance, created, *args, **kwargs):
+#     if created:
+#         cheque = Cheque.objects.get(regularizacao=instance)
+#         cheque.estado_cheque = 'Regularizado'
+#         cheque.save()
+       
 
-
-
+# post_save.connect(update_estado_cheque, sender=Regularizacao)
 

@@ -1,0 +1,78 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+<div class="container">
+ <!--/forms-inner-->
+<div class="forms-inner">
+<!--/set-1-->
+<div class="set-1">
+  <div class="graph-2 general">
+    <h3 class="inner-tittle two">Registar Cheque</h3>
+      <div class="grid-1">
+          <div class="form-body">
+            <form class="form-horizontal" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+             <label for="focusedinput" class="col-sm-2 control-label">{{form.motivo_devolucao.label}}</label>
+             <div class="col-sm-9">
+             {{form.motivo_devolucao}}
+             </div>
+            </div>
+
+            <div class="form-group">
+             <label for="focusedinput" class="col-sm-2 control-label">{{form.numero_cheque.label}}</label>
+             <div class="col-sm-9">
+             {{form.numero_cheque}}
+             </div>
+            </div>
+
+             <div class="form-group">
+             <label for="focusedinput" class="col-sm-2 control-label">{{form.banco.label}}</label>
+             <div class="col-sm-9">
+             {{form.banco}}
+             </div>
+            </div>
+
+            <div class="form-group">
+             <label for="focusedinput" class="col-sm-2 control-label">{{form.emitente.label}}</label>
+             <div class="col-sm-9">
+             {{form.emitente}}
+             </div>
+            </div>
+
+            <div class="form-group">
+             <label for="focusedinput" class="col-sm-2 control-label">{{form.numero_conta.label}}</label>
+             <div class="col-sm-9">
+             {{form.numero_conta}}
+             </div>
+            </div>
+
+            <div class="form-group">
+             <label for="focusedinput" class="col-sm-2 control-label">{{form.valor_cheque.label}}</label>
+             <div class="col-sm-9">
+             {{form.valor_cheque}}
+             </div>
+            </div>
+
+            <div class="form-group">
+             <label for="focusedinput" class="col-sm-2 control-label">{{form.data_devolucao.label}}</label>
+             <div class="col-sm-9">
+             {{form.data_devolucao}}
+             </div>
+            </div>
+
+           <div class="form-group">
+             <label for="focusedinput" class="col-sm-2 control-label">{{form.codigo_balcao.label}}</label>
+             <div class="col-sm-9">
+             {{form.codigo_balcao}}
+             </div>
+            </div>
+            <div class="col-sm-offset-2"> <button type="submit" class="btn btn-default">Gravar</button> </div>
+            <Br/>
+            </form> 
+          </div>
+        </div> 
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content  %} 

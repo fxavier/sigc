@@ -37,7 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'django_celery_results',
+    'django_celery_beat',
+    
+    # SIGC apps
     'core',
+    'cheque',
 ]
 
 MIDDLEWARE = [
@@ -131,3 +137,10 @@ STATICFILES_DIRS = [
 
 MEDIA_ROOT = 'vol/web/media'
 STATIC_ROOT = 'vol/web/static'
+
+CELERY_RESULT_BACKEND = 'django-db'
+
+
+# CELERY_ACCEPT_CONTENT = ['application/json']
+# CELERY_RESULT_SERIALIZER = 'json'
+# CELERY_TASK_SERIALIZER = 'json'

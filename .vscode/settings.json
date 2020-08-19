@@ -1,0 +1,41 @@
+{
+    "cSpell.words": [
+        "Adicionar",
+        "Alternativo",
+        "DOCUMENTO",
+        "Empresas",
+        "Motivos",
+        "Pagamento",
+        "Pessoa",
+        "Regularizacao",
+        "SIGC",
+        "criacao",
+        "documentos",
+        "identificacao"
+    ],
+    "sqltools.connections": [
+        {
+            "database": "openmrs",
+            "dialect": "MySQL",
+            "name": "Niassa",
+            "password": "Lugenda2014",
+            "port": 3306,
+            "server": "197.218.206.34",
+            "username": "root",
+            "driver": "MySQL"
+        },
+        {
+            "database": "sigc",
+            "driver": "PostgreSQL",
+            "name": "sigcdb",
+            "password": "sigc",
+            "pgOptions": {
+                "ssl": {}
+            },
+            "port": 5432,
+            "previewLimit": 50,
+            "server": "localhost",
+            "username": "sigc"
+        }
+    ]
+}
