@@ -138,7 +138,9 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = 'vol/web/media'
 STATIC_ROOT = 'vol/web/static'
 
-CELERY_RESULT_BACKEND = 'django-db'
+CELERY_BROKER_URL = 'redis://redis:6379'
+
+# CELERY_RESULT_BACKEND = 'django-db'
 
 
 # CELERY_ACCEPT_CONTENT = ['application/json']
