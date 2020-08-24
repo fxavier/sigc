@@ -24,11 +24,20 @@
 <script src="{% static 'js/radar.js' %}"></script>	
 <link href="{% static 'css/barChart.css' %}" rel='stylesheet' type='text/css' />
 <link href="{% static 'css/fabochart.css' %}" rel='stylesheet' type='text/css' />
+<!-- Date Time Picker CSS -->
+  <link rel="stylesheet" href="{% static 'date-time-phone/jquery-ui.css' %}">
+  <link rel='stylesheet' href="{% static 'date-time-phone/jquery-ui-timepicker-addon.css' %}" />
+<!-- Date Time Picker CSS -->
+
 <!--clock init-->
 <script src="{% static 'js/css3clock.js' %}"></script>
 <!--Easy Pie Chart-->
 <!--skycons-icons-->
 <script src="{% static 'js/skycons.js' %}"></script>
+
+ <!-- Date Time Picker JS -->
+  <script src="{% static 'date-time-phone/jquery-ui.js' %}" ></script>
+  <script src="{% static 'date-time-phone/jquery-ui-timepicker-addon.js' %}"></script> 
 
 <script src="{% static 'js/jquery.easydropdown.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
@@ -199,6 +208,28 @@
 
 <!-- Bootstrap Core JavaScript -->
    <script src="js/bootstrap.min.js"></script>
+
+<script>
+    $( function() {
+       {% comment %}  // $( "#id_birth_date" ).datetimepicker({ dateFormat: 'yy-mm-dd', maxDate: 0, controlType: 'select'}).attr("autocomplete", "off") ;
+        // $( "#id_birth_date" ).timepicker({ dateFormat: 'yy-mm-dd', maxDate: 0, controlType: 'select'}).attr("autocomplete", "off") ; {% endcomment %}
+        $( "#id_data_devolucao" ).datepicker({ dateFormat: 'dd-mm-yy' }).attr("autocomplete", "off") ;
+    });
+  </script>
+  <!-- Date Time Picker JS -->
+
+  <!-- Phone Mask JS -->
+  <script src="{% static 'date-time-phone/jquery-input-mask-phone-number.min.js' %}"></script> 
+
+  <script>
+    //(xxx) xxx-xxxx format code
+    $(document).ready(function () {
+        $('#id_telefone_1').usPhoneFormat({
+            format: '(xxx) xx-xxxxxxx',
+        });   
+    });
+  </script>
+  <!-- Phone Mask JS -->
 
 </body>
 </html>
