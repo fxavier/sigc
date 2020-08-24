@@ -12,7 +12,8 @@
         "bloqueio",
         "criacao",
         "documentos",
-        "identificacao"
+        "identificacao",
+        "runserver"
     ],
     "sqltools.connections": [
         {
