@@ -8,17 +8,6 @@ class EmitenteForm(forms.ModelForm):
         model = Emitente
         fields = ( 'nome', 'numero_conta', 'telefone_1', 'telefone_2', 'email', 'endereco', 'tipo', 'assinante',)
         
-        widgets = {
-            'nome': forms.TextInput(attrs={'class': 'form-control'}),          
-            'numero_conta': forms.TextInput(attrs={'class': 'form-control'}),
-            'telefone_1': forms.TextInput(attrs={'class': 'form-control'}),
-            'telefone_2': forms.TextInput(attrs={'class': 'form-control'}),
-            'email': forms.TextInput(attrs={'class': 'form-control'}),
-            'endereco': forms.TextInput(attrs={'class': 'form-control'}),
-            'tipo': forms.Select(attrs={'class': 'form-control'}),
-            'assinante': forms.SelectMultiple(attrs={'class': 'form-control'}),
-        }
-
         label = {
             'nome': _('Nome'),           
             'numero_conta': _('Numero da Conta'),
@@ -38,16 +27,16 @@ class ChequeForm(forms.ModelForm):
         fields = ('motivo_devolucao', 'numero_cheque', 'banco', 'emitente', 'numero_conta',
                   'valor_cheque', 'data_devolucao', 'codigo_balcao')
 
-        widgets = {
-            'motivo_devolucao': forms.Select(attrs={'class': 'form-control'}),
-            'numero_cheque': forms.TextInput(attrs={'class': 'form-control'}),
-            'banco': forms.Select(attrs={'class': 'form-control'}),
-            'emitente': forms.Select(attrs={'class': 'form-control'}),
-            'numero_conta': forms.TextInput(attrs={'class': 'form-control'}),
-            'valor_cheque': forms.TextInput(attrs={'class': 'form-control'}),
-            'data_devolucao': forms.DateInput(attrs={'class': 'form-control datepicker'}),
-            'codigo_balcao': forms.TextInput(attrs={'class': 'form-control'})
-        }
+        # widgets = {
+        #     'motivo_devolucao': forms.Select(attrs={'class': 'form-control'}),
+        #     'numero_cheque': forms.TextInput(attrs={'class': 'form-control'}),
+        #     'banco': forms.Select(attrs={'class': 'form-control'}),
+        #     'emitente': forms.Select(attrs={'class': 'form-control'}),
+        #     'numero_conta': forms.TextInput(attrs={'class': 'form-control'}),
+        #     'valor_cheque': forms.TextInput(attrs={'class': 'form-control'}),
+        #     'data_devolucao': forms.DateInput(attrs={'class': 'form-control datepicker'}),
+        #     'codigo_balcao': forms.TextInput(attrs={'class': 'form-control'})
+        # }
 
         label = {
             'motivo_devolucao': _('Motivo Devolucao'),

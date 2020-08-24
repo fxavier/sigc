@@ -1,20 +1,13 @@
 from django import forms
 from django.utils.translation import ugettext as _
 
-from core.models import Regularizacao
+from core.models import Regularizacao, Cheque
 
 
 class RegularizacaoForm(forms.ModelForm):
-
     class Meta:
         model = Regularizacao
-        fields =('forma', 'cheque', 'file',)
-
-        widgets = {
-            'forma': forms.Select(attrs={'class': 'form-control'}),
-            'cheque': forms.Select(attrs={'class': 'form-control'}),
-            'file': forms.FileInput(attrs={'class': 'form-control'}),
-        }
+        fields =('forma', 'file', 'cheque')
 
         label = {
             'forma': _('Forma de Pagamento'),

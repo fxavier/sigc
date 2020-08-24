@@ -31,6 +31,8 @@
 <script src="{% static 'js/skycons.js' %}"></script>
 
 <script src="{% static 'js/jquery.easydropdown.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
 
 
 <!--//skycons-icons-->
@@ -49,7 +51,7 @@
 										<input type="text" value="Search" onFocus="this.value = '';" onBlur="if (this.value == '') {this.value = 'Search';}" class="text"/>
 										<input type="submit" value="">
 									</form>
-							<div class="close"><img src="images/cross.png" /></div>
+							<div class="close"><img src="{% static 'images/cross.png"' %}" /></div>
 						</div>
 							<div class="srch"><button></button></div>
 							<script type="text/javascript">
@@ -110,13 +112,13 @@
 <div style="border-top:1px solid rgba(69, 74, 84, 0.7)"></div>
 <!--/down-->
 				<div class="down">	
-							<a href="index.html"><img src="{% static 'images/admin.jpg' %}"></a>
-							<a href="index.html"><span class=" name-caret">Jasmin</span></a>
-							<p>Administrador do Sistema</p>
+							<a href="index.html"><img src={{request.profile.imageURL}}></a>
+							<a href="index.html"><span class=" name-caret">{{request.user.nome}}</span></a>
+							<p></p>
 						<ul>
 						<li><a class="tooltips" href="index.html"><span>Perfil</span><i class="lnr lnr-user"></i></a></li>
 							<li><a class="tooltips" href="index.html"><span>Definicoes</span><i class="lnr lnr-cog"></i></a></li>
-							<li><a class="tooltips" href="index.html"><span>Sair</span><i class="lnr lnr-power-switch"></i></a></li>
+							<li><a class="tooltips" href="{% url 'account:login' %}"><span>Sair</span><i class="lnr lnr-power-switch"></i></a></li>
 							</ul>
 						</div>
 					<!--//down-->
@@ -125,7 +127,6 @@
 							
 								<li id="menu-academico" ><a href="#"><i class="fa fa-file-text-o"></i> <span>Cadastro</span> <span class="fa fa-angle-right" style="float: right"></span></a>
 									<ul id="menu-academico-sub" >
-									<li id="menu-academico-avaliacoes" ><a href="forms.html">Bancos</a></li>
 									<li id="menu-academico-boletim" ><a href="{% url 'core:emitente-create' %}">Clientes</a></li>
 									</ul>
 								</li>
@@ -133,7 +134,6 @@
 						<li id="menu-academico" ><a href="#"><i class="lnr lnr-book"></i> <span>Cheques</span> <span class="fa fa-angle-right" style="float: right"></span></a>
 								<ul id="menu-academico-sub" >
 								<li id="menu-academico-avaliacoes" ><a href="{% url 'core:cheque-create' %}">Registar</a></li>
-								<li id="menu-academico-boletim" ><a href="register.html">Listar</a></li>
 					
 								</ul>
 							</li>
@@ -141,15 +141,15 @@
 						<li id="menu-academico" ><a href="#"><i class="lnr lnr-layers"></i> <span>Regularização</span> <span class="fa fa-angle-right" style="float: right"></span></a>
 								<ul id="menu-academico-sub" >
 								<li id="menu-academico-avaliacoes" ><a href="{% url 'cheque:regularizacao-create' %}">Registar</a></li>
-								<li id="menu-academico-boletim" ><a href="media.html">Listar</a></li>
 
 								</ul>
 							</li>
 						<li><a href="chart.html"><i class="lnr lnr-chart-bars"></i> <span>Relatórios</span> <span class="fa fa-angle-right" style="float: right"></span></a>
 							<ul>
-							<li><a href="map.html"><i class="lnr lnr-map"></i>Cheques Devolvidos</a></li>
-							<li><a href="graph.html"><i class="lnr lnr-apartment"></i>Cheques Nao Regularizados</a></li>
-							<li><a href="graph.html"><i class="lnr lnr-apartment"></i>Cheques Regularizados</a></li>
+							<li><a href="{% url 'core:emitente' %}"><i class="lnr lnr-map"></i>Clientes</a></li>
+							<li><a href="{% url 'core:cheque' %}"><i class="lnr lnr-map"></i>Cheques Devolvidos</a></li>
+							<li><a href="{% url 'core:cheque-cancelado' %}"><i class="lnr lnr-apartment"></i>Cheques Cancelados</a></li>
+							<li><a href="{% url 'core:cheque-regularizado' %}"><i class="lnr lnr-apartment"></i>Cheques Regularizados</a></li>
 						</ul>
 						</li>
 						<li id="menu-comunicacao" ><a href="#"><i class="fa fa-smile-o"></i> <span>Mais</span><span class="fa fa-angle-double-right" style="float: right"></span></a>

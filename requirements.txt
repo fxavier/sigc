@@ -16,3 +16,7 @@ redis>=3.5.3,<3.6.0
 pyPdf>=1.13,<1.14
 reportlab>=3.5.48,<3.6.0
 python-crontab>=2.5.1,<2.6.0
+
+django-widget-tweaks>=1.4.8,<1.5.0
+
+xhtml2pdf>=0.2.4,<0.3.0

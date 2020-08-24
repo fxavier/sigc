@@ -1,7 +1,12 @@
 from django.db import models
+from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import PermissionsMixin
+from django.urls import reverse
 from django.db.models.signals import pre_save, post_save
 
-from core.utils import regularizacao_file_path
+from PIL import Image
+
+from core.utils import regularizacao_file_path, user_image_path
 
 
 ESTADO_CHEQUE = (
@@ -48,6 +53,7 @@ class Assinante(models.Model):
     telefone_2 = models.CharField(max_length=50, unique=True)
     email = models.EmailField(max_length=100, unique=True)
     endereco = models.CharField(max_length=255)
+    bloqueio_utr = models.BooleanField(default=False)
 
     def __str__(self):
         return self.nome
@@ -61,9 +67,13 @@ class Emitente(models.Model):
     endereco = models.CharField(max_length=255)
     tipo = models.CharField(max_length=1, choices=TIPO_EMITENTE)
     assinante = models.ManyToManyField(Assinante, blank=True)
+    bloqueio_utr = models.BooleanField(default=False)
 
     def __str__(self):
         return self.nome
+
+    def get_absolute_url(self):
+        return reverse('core:emitente')
 
 
 class Cheque(models.Model):
@@ -91,12 +101,80 @@ class Regularizacao(models.Model):
     def __str__(self):
         return self.cheque.numero_cheque
 
-# def update_estado_cheque(sender, instance, created, *args, **kwargs):
-#     if created:
-#         cheque = Cheque.objects.get(regularizacao=instance)
-#         cheque.estado_cheque = 'Regularizado'
-#         cheque.save()
+    class Meta:
+        verbose_name_plural = 'Regularizacoes'
+
+def update_estado_cheque(sender, instance, created, *args, **kwargs):
+    if created:
+        cheque = Cheque.objects.get(regularizacao=instance)
+        cheque.estado_cheque = 'Regularizado'
+        cheque.save()
        
 
-# post_save.connect(update_estado_cheque, sender=Regularizacao)
+post_save.connect(update_estado_cheque, sender=Regularizacao)
 
+
+class UserManager(BaseUserManager):
+
+    def create_user(self, email, password=None, **extra_fields):
+        """Creates and saves a new user"""
+        if not email:
+            raise ValueError('Users must have an email address')
+        user = self.model(email=self.normalize_email(email), **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+
+        return user
+
+    def create_superuser(self, email, password):
+        """Creates and saves a new super user"""
+        user = self.create_user(email, password)
+        user.is_staff = True
+        user.is_superuser = True
+        user.save(using=self._db)
+
+        return user
+
+
+class User(AbstractBaseUser, PermissionsMixin):
+    """Custom user model that suppors using email instead of username"""
+    email = models.EmailField(max_length=255, unique=True)
+    nome = models.CharField(max_length=255, null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+
+    objects = UserManager()
+
+    USERNAME_FIELD = 'email'
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User,on_delete=models.CASCADE,related_name="profile")
+    image = models.ImageField(upload_to=user_image_path, default="uploads/documentos/default_user.png")
+   
+    def __str__(self):
+        return self.user.email
+
+    @property
+    def imageURL(self):
+        try:
+            url = self.image.url
+        except:
+            url = ''
+        return url
+
+
+    def save(self, *args,**kwargs):
+        super(Profile, self).save(*args,**kwargs)
+        img = Image.open(self.image)
+        if img.height > 200 or img.width > 200 :
+            new_size = (200,200)
+            img.thumbnail(new_size)
+            img.save(self.image.path)
+
+def post_save_user_signal(sender, instance, created, *args, **kwargs):
+    if created:
+        profile = Profile.objects.create(user=instance)
+        profile.save()
+
+post_save.connect(post_save_user_signal, sender=User)

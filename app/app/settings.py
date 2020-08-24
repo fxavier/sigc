@@ -40,10 +40,12 @@ INSTALLED_APPS = [
 
     'django_celery_results',
     'django_celery_beat',
+    'widget_tweaks',
     
     # SIGC apps
     'core',
     'cheque',
+    'account',
 ]
 
 MIDDLEWARE = [
@@ -123,7 +125,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-
+AUTH_USER_MODEL = 'core.User'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
@@ -138,11 +140,23 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = 'vol/web/media'
 STATIC_ROOT = 'vol/web/static'
 
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = 'login/'
+
 CELERY_BROKER_URL = 'redis://redis:6379'
 
-# CELERY_RESULT_BACKEND = 'django-db'
+CELERY_RESULT_BACKEND = 'django-db'
 
 
-# CELERY_ACCEPT_CONTENT = ['application/json']
-# CELERY_RESULT_SERIALIZER = 'json'
-# CELERY_TASK_SERIALIZER = 'json'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+
+#Email 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.mail.fincode.co.mz'
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'xavier.f@fincode.co.mz'
+EMAIL_HOST_PASSWORD = 'Xaviersys7841'

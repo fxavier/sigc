@@ -1,11 +1,12 @@
 {% extends 'layouts/base.html' %}
+{% load static %}
 {% block content %}
 <div class="container">
 
 <h3 class="inner-tittle two">Lista de clientes </h3>
 <div class="graph">
 <div class="tables">
-    <table class="table">
+    <table class="table table-hover">
      <thead>
         <tr>
             <th>Nome</th>
@@ -14,10 +15,12 @@
             <th>Tel. Alternativo</th>
             <th>Email</th>
             <th>Endereco</th>
+            <th></th>
         </tr>
      </thead>
      <tbody>
-        <tr class="active">
+        <tr>
+        
         {% for emitente in object_list  %}
 
             <td>{{emitente.nome}}</td>
@@ -27,12 +30,16 @@
             <td>{{emitente.email}}</td>
             <td>{{emitente.endereco}}</td>
         </tr>
-        {% endfor %}     
+        {% endfor %}
         </tbody>
+      
     </table> 
 </div>
-
+<a href="{% url 'core:emitente-relatorio' %}" class="btn btn-success">
+<span class="glyphicon glyphicon-print"></span>Imprimir
+</a>
 </div>
+
 
 </div>
 

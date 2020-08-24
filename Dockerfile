@@ -1,5 +1,5 @@
 FROM python:3.8-alpine
-MAINTAINER Xavier Francisco
+LABEL maintainer="Xavier Francisco" 
 
 ENV PYTHONUMBUFFERED 1
 
