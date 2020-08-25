@@ -57,10 +57,9 @@ def update_status_cheque():
 def bloqueio_conta():
     cheque_obj = Cheque.objects.all()
     for cheque in cheque_obj:
-        if cheque.bloqueio_utr == False and cheque.estado_cheque == 'Cancelado':
-            if cheque.dias > 10:
-                cheque.bloqueio_utr = True
-                cheque.save()
+        if cheque.estado_cheque == 'Cancelado'and cheque.dias > 10:
+            cheque.emitente.bloqueio_utr = True
+            cheque.save()
 
     return 'Conta bloqueada no BM'
 
